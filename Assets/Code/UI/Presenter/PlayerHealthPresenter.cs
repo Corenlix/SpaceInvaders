@@ -10,27 +10,39 @@ namespace Code.UI.Presenter
     {
         [SerializeField] private HealthView _healthView;
         private Player _player;
-        
+
         [Inject]
         private void Inject(Player player)
         {
             _player = player;
         }
-        
+
         private void Awake()
         {
             _player.PlayerStatsProcessor.HealthChanged += OnHealthChanged;
             _player.PlayerStatsProcessor.ShieldChanged += OnShieldChanged;
+            UpdateHealth();
+            UpdateShield();
         }
 
-        private void OnHealthChanged(IStatsProcessor statsProcessor, float value)
+        private void UpdateHealth()
         {
             _healthView.UpdateHealth(_player.PlayerStatsProcessor.Health, _player.PlayerStatsProcessor.MaxHealth);
         }
 
-        private void OnShieldChanged(IStatsProcessor statsProcessor, float value)
+        private void UpdateShield()
         {
             _healthView.UpdateShield(_player.PlayerStatsProcessor.Shield, _player.PlayerStatsProcessor.MaxShield);
+        }
+
+        private void OnHealthChanged(IStatsProcessor statsProcessor, float value)
+        {
+            UpdateHealth();
+        }
+
+        private void OnShieldChanged(IStatsProcessor statsProcessor, float value)
+        {
+            UpdateShield();
         }
 
         private void OnDestroy()
